@@ -28,7 +28,7 @@ export interface Settings {
 const state = reactive<Partial<Settings>>({
     active: "",
     saves: [],
-    showTPS: true,
+    showTPS: false,
     theme: Themes.Nordic,
     unthrottled: false,
     alignUnits: false,
@@ -64,7 +64,7 @@ export const hardResetSettings = (window.hardResetSettings = () => {
     const settings: Partial<Settings> = {
         active: "",
         saves: [],
-        showTPS: true,
+        showTPS: false,
         theme: Themes.Nordic,
         unthrottled: false,
         alignUnits: false,

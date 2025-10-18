@@ -173,6 +173,21 @@ const layer = createLayer(id, function (this: any) {
                     </div>
                 </div>
 
+                <div style="margin: 20px 0; padding: 15px; border: 2px solid #2196F3; border-radius: 10px; background: #e3f2fd;">
+                    <h3>Active Deliveries ({activeDeliveries.value.length})</h3>
+                    {activeDeliveries.value.length === 0 ? (
+                        <p style="font-style: italic;">No active deliveries</p>
+                    ) : (
+                        activeDeliveries.value.map(delivery => (
+                            <div key={delivery.id} style="margin: 10px 0; padding: 10px; background: white; border-radius: 5px; border: 1px solid #ddd;">
+                                <div><strong>🚗 Driver #{delivery.driverId}:</strong> Delivering {delivery.pizzaType} pizza</div>
+                                <div><strong>⏱️ Time Remaining:</strong> {Math.ceil(delivery.timeRemaining)}s</div>
+                                <div style="color: #2e7d32;"><strong>💰 Will Earn:</strong> ${format(delivery.payout)}</div>
+                            </div>
+                        ))
+                    )}
+                </div>
+
                 <div style="margin: 20px 0; padding: 15px; border: 2px solid #4CAF50; border-radius: 10px; background: #e8f5e9;">
                     <h3>Available Jobs ({jobQueue.value.length})</h3>
                     {jobQueue.value.length === 0 ? (
@@ -221,21 +236,6 @@ const layer = createLayer(id, function (this: any) {
                                         <span style="color: #d32f2f; margin-left: 10px; font-weight: bold;">⚠ No drivers available!</span>
                                     )}
                                 </div>
-                            </div>
-                        ))
-                    )}
-                </div>
-
-                <div style="margin: 20px 0; padding: 15px; border: 2px solid #2196F3; border-radius: 10px; background: #e3f2fd;">
-                    <h3>Active Deliveries ({activeDeliveries.value.length})</h3>
-                    {activeDeliveries.value.length === 0 ? (
-                        <p style="font-style: italic;">No active deliveries</p>
-                    ) : (
-                        activeDeliveries.value.map(delivery => (
-                            <div key={delivery.id} style="margin: 10px 0; padding: 10px; background: white; border-radius: 5px; border: 1px solid #ddd;">
-                                <div><strong>🚗 Driver #{delivery.driverId}:</strong> Delivering {delivery.pizzaType} pizza</div>
-                                <div><strong>⏱️ Time Remaining:</strong> {Math.ceil(delivery.timeRemaining)}s</div>
-                                <div style="color: #2e7d32;"><strong>💰 Will Earn:</strong> ${format(delivery.payout)}</div>
                             </div>
                         ))
                     )}

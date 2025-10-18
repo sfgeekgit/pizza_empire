@@ -101,7 +101,8 @@ export default {
         ...defaultTheme,
         variables: {
             ...defaultTheme.variables,
-            "--foreground": "#D8DEE9",
+            ///"--foreground": "#D8DEE9",
+	    "--foreground": "#555555",
             "--background": "#2E3440",
             "--feature-foreground": "#000",
             "--raised-background": "#3B4252",
