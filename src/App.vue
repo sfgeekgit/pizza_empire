@@ -5,7 +5,7 @@
     <template v-else>
         <div id="modal-root" :style="theme" />
         <div class="app" :style="theme" :class="{ useHeader }">
-            <Nav v-if="useHeader" />
+            
             <Game />
             <TPS v-if="unref(showTPS)" />
             <AddictionWarning />
@@ -29,7 +29,7 @@ import { render } from "util/vue";
 import type { CSSProperties } from "vue";
 import { computed, toRef, unref } from "vue";
 import Game from "./components/Game.vue";
-import Nav from "./components/Nav.vue";
+
 import TPS from "./components/TPS.vue";
 import projInfo from "./data/projInfo.json";
 import themes from "./data/themes";

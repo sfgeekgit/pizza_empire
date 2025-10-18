@@ -7,7 +7,7 @@
             :style="unref(layers[tab]?.style)"
             :class="unref(layers[tab]?.classes)"
         >
-            <Nav v-if="index === 0 && !useHeader" />
+
             <div class="inner-tab">
                 <LayerVue
                     v-if="layerKeys.includes(tab)"
@@ -27,7 +27,7 @@ import { type Layer, layers } from "game/layers";
 import player from "game/player";
 import { computed, toRef, unref } from "vue";
 import LayerVue from "./Layer.vue";
-import Nav from "./Nav.vue";
+
 
 const tabs = toRef(player, "tabs");
 const layerKeys = computed(() => Object.keys(layers));

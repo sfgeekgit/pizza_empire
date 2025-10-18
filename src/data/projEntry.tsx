@@ -10,11 +10,15 @@ import type { DecimalSource } from "util/bignum";
 import Decimal, { format, formatTime } from "util/bignum";
 import { render } from "util/vue";
 import { computed, toRaw } from "vue";
-import prestige from "./layers/prestige";
+import main from "./layers/main"; // Pizza
+
+
+// import prestige from "./layers/prestige"; // commenting out (might re-add prestige later)
 
 /**
  * @hidden
  */
+/*  Replaceing framework default with pizza  
 export const main = createLayer("main", layer => {
     const points = createResource<DecimalSource>(10);
     const best = trackBest(points);
@@ -32,10 +36,14 @@ export const main = createLayer("main", layer => {
 
     // Note: Casting as generic tree to avoid recursive type definitions
     const tree = createTree(() => ({
-        nodes: noPersist([[prestige.treeNode]]),
+        //nodes: noPersist([[prestige.treeNode]]),
+	nodes: noPersist([]),
+
         branches: [],
         onReset() {
-            points.value = toRaw(tree.resettingNode.value) === toRaw(prestige.treeNode) ? 0 : 10;
+            //points.value = toRaw(tree.resettingNode.value) === toRaw(prestige.treeNode) ? 0 : 10;
+	    points.value = 10;
+
             best.value = points.value;
             total.value = points.value;
         },
@@ -90,7 +98,7 @@ export const main = createLayer("main", layer => {
         tree
     };
 });
-
+*/
 /**
  * Given a player save data object being loaded, return a list of layers that should currently be enabled.
  * If your project does not use dynamic layers, this should just return all layers.
@@ -98,7 +106,9 @@ export const main = createLayer("main", layer => {
 export const getInitialLayers = (
     /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
     player: Partial<Player>
-): Array<Layer> => [main, prestige];
+// ): Array<Layer> => [main, prestige];
+): Array<Layer> => [main];
+
 
 /**
  * A computed ref whose value is true whenever the game is over.

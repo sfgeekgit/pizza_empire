@@ -3,7 +3,7 @@ import vueJsx from "@vitejs/plugin-vue-jsx";
 import { defineConfig } from "vite";
 import { VitePWA } from "vite-plugin-pwa";
 import tsconfigPaths from "vite-tsconfig-paths";
-import projInfo from "./src/data/projInfo.json";
+import projInfo from "./src/data/projInfo";
 
 // https://vitejs.dev/config/
 export default defineConfig({
