@@ -11,6 +11,8 @@ import Decimal, { format, formatTime } from "util/bignum";
 import { render } from "util/vue";
 import { computed, toRaw } from "vue";
 import main from "./layers/main"; // Pizza
+import intro from "./layers/intro"; // Intro story
+import chapter1 from "./layers/chapter1"; // Chapter 1 story
 
 
 // import prestige from "./layers/prestige"; // commenting out (might re-add prestige later)
@@ -107,7 +109,7 @@ export const getInitialLayers = (
     /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
     player: Partial<Player>
 // ): Array<Layer> => [main, prestige];
-): Array<Layer> => [main];
+): Array<Layer> => [intro, main, chapter1];
 
 
 /**

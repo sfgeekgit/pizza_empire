@@ -6,7 +6,7 @@
     "discordLink": "",
     "versionNumber": "0.1",
     "versionTitle": "Prototype",
-    "initialTabs": ["main"],
+    "initialTabs": ["intro"],
     "maxTickLength": 3600000,
     "enablePausing": true,
     "showNews": false

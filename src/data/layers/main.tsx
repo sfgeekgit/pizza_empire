@@ -1,13 +1,14 @@
-import { createLayer } from "game/layers";
+import { createLayer, layers } from "game/layers";
 import { createResource, trackBest, trackTotal } from "features/resources/resource";
 import { createClickable } from "features/clickables/clickable";
 import { jsx, JSXFunction } from "game/common";
 import { createTreeNode } from "features/trees/tree";
 import Decimal, { DecimalSource, format } from "util/bignum";
 import { render } from "util/vue";
-import { computed, ref, Ref } from "vue";
+import { computed, ref, Ref, watch } from "vue";
 import { globalBus } from "game/events";
 import { noPersist } from "game/persistence";
+import { persistent } from "game/persistence";
 
 // Pizza types that can be unlocked
 const PIZZA_TYPES = ["Cheese", "Pepperoni", "Supreme", "Hawaiian", "Meat Lovers"];
@@ -36,9 +37,69 @@ const layer = createLayer(id, function (this: any) {
     const best = trackBest(money);
     const total = trackTotal(money);
 
-    // Persistent state
-    const unlockedPizzas: Ref<string[]> = ref(["Cheese"]);
-    const totalDrivers: Ref<number> = ref(1);
+    // Persistent state - must be created first
+    const totalDrivers = persistent<number>(1);
+    const unlockedPizzas = persistent<string[]>(["Cheese"]);
+    const introBonusApplied = persistent<boolean>(false);
+    const chapter1BonusApplied = persistent<boolean>(false);
+    const qualityBonus = persistent<number>(0); // Percentage bonus to earnings
+    const speedBonus = persistent<number>(0);   // Percentage reduction to delivery time
+
+    // Read intro choices
+    const introChoice = computed(() => {
+        return (layers.intro as any)?.playerChoice?.value || "";
+    });
+
+    // Apply intro bonuses once when intro completes
+    const introComplete = computed(() => {
+        return (layers.intro as any)?.introComplete?.value || false;
+    });
+
+    // Watch for intro completion and apply bonuses reactively
+    watch([introComplete, introChoice], ([complete, choice]) => {
+        if (complete && !introBonusApplied.value && choice) {
+            if (choice === "hire_driver") {
+                totalDrivers.value = 2;
+            } else if (choice === "buy_ingredients") {
+                if (!unlockedPizzas.value.includes("Pepperoni")) {
+                    unlockedPizzas.value.push("Pepperoni");
+                }
+            }
+            introBonusApplied.value = true;
+        }
+    }, { immediate: true });
+
+    // Chapter 1 - trigger and bonuses
+    const chapter1Choice = computed(() => {
+        return (layers.chapter1 as any)?.playerChoice?.value || "";
+    });
+
+    const chapter1Complete = computed(() => {
+        return (layers.chapter1 as any)?.complete?.value || false;
+    });
+
+    const shouldShowChapter1 = computed(() => {
+        return Decimal.gte(money.value, 101) && !chapter1Complete.value;
+    });
+
+    // Watch for chapter 1 trigger
+    watch(shouldShowChapter1, (should) => {
+        if (should) {
+            player.tabs = ["chapter1"];
+        }
+    }, { immediate: true });
+
+    // Watch for chapter 1 completion and apply bonuses
+    watch([chapter1Complete, chapter1Choice], ([complete, choice]) => {
+        if (complete && !chapter1BonusApplied.value && choice) {
+            if (choice === "quality") {
+                qualityBonus.value = 50; // +50% earnings
+            } else if (choice === "speed") {
+                speedBonus.value = 20; // -20% delivery time
+            }
+            chapter1BonusApplied.value = true;
+        }
+    }, { immediate: true });
     const jobQueue: Ref<DeliveryJob[]> = ref([]);
     const activeDeliveries: Ref<ActiveDelivery[]> = ref([]);
     const nextJobId = ref(0);
@@ -52,15 +113,27 @@ const layer = createLayer(id, function (this: any) {
     // Generate random job
     function generateJob(): DeliveryJob {
         const pizzaType = PIZZA_TYPES[Math.floor(Math.random() * Math.min(PIZZA_TYPES.length, unlockedPizzas.value.length + 2))];
-        const duration = 10 + Math.floor(Math.random() * 50);
+        const baseDuration = 10 + Math.floor(Math.random() * 30);
+        let duration = baseDuration;
         const basePayout = 10 + Math.floor(Math.random() * 40);
         const multiplier = PIZZA_TYPES.indexOf(pizzaType) + 1;
-        
+
+        // Apply speed bonus (reduce duration)
+        if (speedBonus.value > 0) {
+            duration = Math.floor(duration * (1 - speedBonus.value / 100));
+        }
+
+        // Apply quality bonus (increase payout)
+        let payout = basePayout * multiplier;
+        if (qualityBonus.value > 0) {
+            payout = Math.floor(payout * (1 + qualityBonus.value / 100));
+        }
+
         return {
             id: nextJobId.value++,
             duration,
             pizzaType,
-            payout: basePayout * multiplier
+            payout
         };
     }
 
@@ -106,10 +179,16 @@ const layer = createLayer(id, function (this: any) {
 
     // Update logic
     globalBus.on("update", diff => {
+        // Pause game until intro is complete
+        const introLayer = layers.intro as any;
+        if (introLayer && !introLayer.introComplete?.value) {
+            return;
+        }
+
         // Update active deliveries
         for (let i = activeDeliveries.value.length - 1; i >= 0; i--) {
             activeDeliveries.value[i].timeRemaining -= diff;
-            
+
             if (activeDeliveries.value[i].timeRemaining <= 0) {
                 money.value = Decimal.add(money.value, activeDeliveries.value[i].payout);
                 activeDeliveries.value.splice(i, 1);
@@ -119,7 +198,7 @@ const layer = createLayer(id, function (this: any) {
         // Generate new jobs
         timeSinceLastJob.value += diff;
         //if (timeSinceLastJob.value >= 60) {
-	if (timeSinceLastJob.value >= 20) {  // Faster for dev
+	if (timeSinceLastJob.value >= 24) {  // Faster for dev
             timeSinceLastJob.value = 0;
             jobQueue.value.push(generateJob());
         }
@@ -260,6 +339,10 @@ const layer = createLayer(id, function (this: any) {
         total,
         unlockedPizzas,
         totalDrivers,
+        introBonusApplied,
+        chapter1BonusApplied,
+        qualityBonus,
+        speedBonus,
         jobQueue,
         activeDeliveries,
         nextJobId,
