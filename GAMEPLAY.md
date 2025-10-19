@@ -1,0 +1,7 @@
+# Pizza Delivery Empire - Gameplay Description
+
+**Pizza Delivery Empire** is an incremental/idle game where you manage a pizza delivery business. The game begins with an intro chapter that sets up your new pizza shop and offers a choice between hiring an extra driver or unlocking a premium pizza type, establishing the narrative framework before gameplay begins.
+
+You accept delivery jobs that specify pizza type, duration, and payout, then assign them to your available drivers who complete deliveries in real-time. Each driver has a unique name and can only handle one job at a time, rotating through a queue system based on availability. Earn money to hire additional drivers (with exponentially increasing costs) and unlock new pizza types (Pepperoni, Supreme, Hawaiian, Meat Lovers) which unlock higher-paying job opportunities.
+
+The story unfolds through chapters triggered at money milestones ($101, $1000, $2000, $3000), following your rivalry-turned-partnership with Tony, owner of the competing "Tony's Speedy Pizza." Early chapters focus on competitive pressure where you choose between quality or speed bonuses, while later chapters shift to themes of community and cooperation as you face corporate chains together and eventually mentor other local business owners. Jobs auto-generate every few seconds up to a queue limit, and you must manually accept/decline them based on whether you have the required pizza unlocked and drivers available. Win condition is reaching $1 million.

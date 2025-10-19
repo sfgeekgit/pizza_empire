@@ -5,7 +5,7 @@
                 <h2>Settings</h2>
                 <div class="option-tabs">
                     <button :class="{selected: isTab('behaviour')}" @click="setTab('behaviour')">Behaviour</button>
-                    <button :class="{selected: isTab('appearance')}" @click="setTab('appearance')">Appearance</button>
+                    <!-- <button :class="{selected: isTab('appearance')}" @click="setTab('appearance')">Appearance</button> -->
                 </div>
             </div>
         </template>
@@ -17,13 +17,20 @@
                 <Toggle :title="showHealthWarningTitle" v-model="showHealthWarning" v-if="!projInfo.disableHealthWarning" />
                 <Toggle :title="autosaveTitle" v-model="autosave" />
                 <FeedbackButton v-if="!autosave" class="button save-button" @click="save()">Manually save</FeedbackButton>
+                <hr style="margin: 20px 0;" />
+                <div style="margin-top: 20px;">
+                    <FeedbackButton class="button danger-button" @click="confirmReset()">Reset Game</FeedbackButton>
+                    <p style="font-size: 12px; opacity: 0.7; margin-top: 10px;">This will delete all progress and start over from the beginning.</p>
+                </div>
             </div>
+            <!-- Appearance tab commented out - can be re-enabled later
             <div v-if="isTab('appearance')">
                 <Select :title="themeTitle" :options="themes" v-model="theme" />
                 <SettingFields />
                 <Toggle :title="showTPSTitle" v-model="showTPS" />
                 <Toggle :title="alignModifierUnitsTitle" v-model="alignUnits" />
             </div>
+            -->
         </template>
     </Modal>
 </template>
@@ -54,10 +61,20 @@ function setTab(tab: string) {
     currentTab.value = tab;
 }
 
+function confirmReset() {
+    if (confirm("Are you sure you want to reset the game? This will delete ALL progress and cannot be undone!")) {
+        // Clear localStorage
+        localStorage.clear();
+        // Reload the page
+        window.location.reload();
+    }
+}
+
 defineExpose({
     isTab,
     setTab,
     save,
+    confirmReset,
     open() {
         isOpen.value = true;
     }
@@ -151,5 +168,15 @@ const alignModifierUnitsTitle = <span class="option-title">
 
 .save-button {
     text-align: right;
+}
+
+.danger-button {
+    background-color: var(--danger) !important;
+    color: white !important;
+    font-weight: bold;
+}
+
+.danger-button:hover {
+    opacity: 0.8;
 }
 </style>

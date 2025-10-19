@@ -1,4 +1,5 @@
 {
+    "_comment": "Game balance settings (win amounts, costs, progression, etc.) are configured in src/data/gameConfig.ts",
     "title": "Pizza Delivery Empire",
     "id": "pizza-delivery",
     "author": "Your Name",
