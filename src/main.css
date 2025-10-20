@@ -8,6 +8,7 @@
 	font-weight: bold;
 	margin: auto;
 	text-size-adjust: none;
+	box-sizing: border-box;
 }
 
 *:focus {
@@ -83,4 +84,16 @@ ul {
 	word-wrap: normal;
 	white-space: nowrap;
 	direction: ltr;
+}
+
+/* Mobile responsive overrides */
+@media (max-width: 767px) {
+	/* Reduce margins on story content */
+	[style*="max-width: 600px"] {
+		max-width: 100% !important;
+		margin-left: 10px !important;
+		margin-right: 10px !important;
+		padding-left: 10px !important;
+		padding-right: 10px !important;
+	}
 }

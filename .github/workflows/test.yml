@@ -1,9 +1,10 @@
 name: Run Tests
 on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+  # push:                    # DISABLED: Uncomment to auto-run tests on push to main
+  #   branches: [ main ]
+  # pull_request:            # DISABLED: Uncomment to auto-run tests on pull requests
+  #   branches: [ main ]
+  workflow_dispatch:         # Manual trigger only
 jobs:
   test:
     runs-on: ubuntu-latest

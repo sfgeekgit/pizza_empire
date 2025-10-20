@@ -269,7 +269,10 @@ const layer = createLayer(id, function (this: any) {
         },
         style: {
             minHeight: "100px",
-            width: "180px"
+            width: "160px",
+            minWidth: "140px",
+            maxWidth: "180px",
+            flex: "1 1 160px"
         }
     }));
 
@@ -290,7 +293,10 @@ const layer = createLayer(id, function (this: any) {
             visibility: () => !unlockedPizzas.value.includes(pizzaName),
             style: {
                 minHeight: "100px",
-                width: "180px"
+                width: "160px",
+                minWidth: "140px",
+                maxWidth: "180px",
+                flex: "1 1 160px"
             }
         }));
     });
@@ -381,24 +387,24 @@ const layer = createLayer(id, function (this: any) {
     // Display
     const display: JSXFunction = () => {
         return (
-            <div>
+            <div style="padding: 0 5px;">
                 <h2>Pizza Delivery Empire</h2>
 
-                <div style="margin: 20px 0; padding: 15px; border: 2px solid #FFA500; border-radius: 10px; background: #fff3e0;">
+                <div style="margin: 15px 0; padding: 12px; border: 2px solid #FFA500; border-radius: 10px; background: #fff3e0;">
                     <h3>Resources</h3>
-                    <div style="font-size: 18px;"><strong>Money:</strong> ${format(money.value)}</div>
-                    <div style="font-size: 16px;"><strong>Drivers:</strong> {availableDrivers.value.length} / {drivers.value.length} available</div>
-                    <div style="font-size: 16px;"><strong>Unlocked Pizzas:</strong> {unlockedPizzas.value.join(", ")}</div>
+                    <div style="font-size: 16px;"><strong>Money:</strong> ${format(money.value)}</div>
+                    <div style="font-size: 14px;"><strong>Drivers:</strong> {availableDrivers.value.length} / {drivers.value.length} available</div>
+                    <div style="font-size: 14px;"><strong>Unlocked Pizzas:</strong> {unlockedPizzas.value.join(", ")}</div>
                 </div>
 
-                <div style="margin: 20px 0;">
-                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <div style="margin: 15px 0;">
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;">
                         {render(hireDriverClickable)}
                         {pizzaUnlockClickables.map(clickable => render(clickable))}
                     </div>
                 </div>
 
-                <div style="margin: 20px 0; padding: 15px; border: 2px solid #2196F3; border-radius: 10px; background: #e3f2fd;">
+                <div style="margin: 15px 0; padding: 12px; border: 2px solid #2196F3; border-radius: 10px; background: #e3f2fd;">
                     <h3>Active Deliveries ({activeDeliveries.value.length})</h3>
                     {activeDeliveries.value.length === 0 ? (
                         <p style="font-style: italic;">No active deliveries</p>
@@ -406,39 +412,38 @@ const layer = createLayer(id, function (this: any) {
                         activeDeliveries.value.map(delivery => {
                             const driver = drivers.value.find(d => d.id === delivery.driverId);
                             return (
-                                <div key={delivery.id} style="margin: 10px 0; padding: 10px; background: white; border-radius: 5px; border: 1px solid #ddd;">
-                                    <div><strong>🚗 {driver?.name || `Driver #${delivery.driverId}`}:</strong> Delivering {delivery.pizzaType} pizza</div>
-                                    <div><strong>⏱️ Time Remaining:</strong> {Math.ceil(delivery.timeRemaining)}s</div>
-                                    <div style="color: #2e7d32;"><strong>💰 Will Earn:</strong> ${format(delivery.payout)}</div>
+                                <div key={delivery.id} style="margin: 10px 0; padding: 8px; background: white; border-radius: 5px; border: 1px solid #ddd;">
+                                    <div style="font-size: 14px;"><strong>🚗 {driver?.name || `Driver #${delivery.driverId}`}:</strong> Delivering {delivery.pizzaType} pizza</div>
+                                    <div style="font-size: 14px;"><strong>⏱️ Time:</strong> {Math.ceil(delivery.timeRemaining)}s</div>
+                                    <div style="color: #2e7d32; font-size: 14px;"><strong>💰 Earn:</strong> ${format(delivery.payout)}</div>
                                 </div>
                             );
                         })
                     )}
                 </div>
 
-                <div style="margin: 20px 0; padding: 15px; border: 2px solid #4CAF50; border-radius: 10px; background: #e8f5e9;">
+                <div style="margin: 15px 0; padding: 12px; border: 2px solid #4CAF50; border-radius: 10px; background: #e8f5e9;">
                     <h3>Available Jobs ({jobQueue.value.length})</h3>
                     {jobQueue.value.length === 0 ? (
                         <p style="font-style: italic;">No jobs available. New jobs arrive every 60 seconds.</p>
                     ) : (
                         jobQueue.value.map(job => (
-                            <div key={job.id} style="margin: 10px 0; padding: 10px; background: white; border-radius: 5px; border: 1px solid #ddd;">
-                                <div><strong>Pizza:</strong> {job.pizzaType}</div>
-                                <div><strong>Duration:</strong> {job.duration}s</div>
-                                <div><strong>Payout:</strong> ${format(job.payout)}</div>
-                                <div style="margin-top: 10px;">
+                            <div key={job.id} style="margin: 10px 0; padding: 8px; background: white; border-radius: 5px; border: 1px solid #ddd;">
+                                <div style="font-size: 14px;"><strong>Pizza:</strong> {job.pizzaType}</div>
+                                <div style="font-size: 14px;"><strong>Duration:</strong> {job.duration}s</div>
+                                <div style="font-size: 14px;"><strong>Payout:</strong> ${format(job.payout)}</div>
+                                <div style="margin-top: 8px; display: flex; flex-wrap: wrap; gap: 5px; align-items: center;">
                                     <button
                                         onClick={() => acceptJob(job)}
                                         disabled={!canAcceptJob(job)}
                                         style={{
                                             background: canAcceptJob(job) ? "#4CAF50" : "#ccc",
                                             color: "white",
-                                            padding: "8px 16px",
-                                            marginRight: "5px",
+                                            padding: "6px 12px",
                                             border: "none",
                                             borderRadius: "4px",
                                             cursor: canAcceptJob(job) ? "pointer" : "not-allowed",
-                                            fontSize: "14px"
+                                            fontSize: "13px"
                                         }}
                                     >
                                         Accept
@@ -448,20 +453,20 @@ const layer = createLayer(id, function (this: any) {
                                         style={{
                                             background: "#f44336",
                                             color: "white",
-                                            padding: "8px 16px",
+                                            padding: "6px 12px",
                                             border: "none",
                                             borderRadius: "4px",
                                             cursor: "pointer",
-                                            fontSize: "14px"
+                                            fontSize: "13px"
                                         }}
                                     >
                                         Decline
                                     </button>
                                     {!unlockedPizzas.value.includes(job.pizzaType) && (
-                                        <span style="color: #d32f2f; margin-left: 10px; font-weight: bold;">⚠ Need {job.pizzaType} pizza unlocked!</span>
+                                        <span style="color: #d32f2f; font-weight: bold; font-size: 12px;">⚠ Need {job.pizzaType}!</span>
                                     )}
                                     {availableDrivers.value <= 0 && unlockedPizzas.value.includes(job.pizzaType) && (
-                                        <span style="color: #d32f2f; margin-left: 10px; font-weight: bold;">⚠ No drivers available!</span>
+                                        <span style="color: #d32f2f; font-weight: bold; font-size: 12px;">⚠ No drivers!</span>
                                     )}
                                 </div>
                             </div>
@@ -470,10 +475,10 @@ const layer = createLayer(id, function (this: any) {
                 </div>
 
                 {Decimal.gte(money.value, G_CONF.WIN_AMOUNT) && (
-                    <div style="margin: 20px 0; padding: 30px; background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%); border-radius: 10px; text-align: center; border: 3px solid #ff6f00; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
-                        <h1 style="font-size: 48px; margin: 0;">🎉 YOU WIN! 🎉</h1>
-                        <p style="font-size: 24px; margin: 10px 0;">You've earned ${format(G_CONF.WIN_AMOUNT)}!</p>
-                        <p style="font-size: 18px;">You've built a successful pizza delivery empire!</p>
+                    <div style="margin: 15px 0; padding: 20px; background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%); border-radius: 10px; text-align: center; border: 3px solid #ff6f00; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+                        <h1 style="font-size: 32px; margin: 0;">🎉 YOU WIN! 🎉</h1>
+                        <p style="font-size: 18px; margin: 10px 0;">You've earned ${format(G_CONF.WIN_AMOUNT)}!</p>
+                        <p style="font-size: 14px;">You've built a successful pizza delivery empire!</p>
                     </div>
                 )}
 

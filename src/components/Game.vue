@@ -59,7 +59,9 @@ function gatherLayerProps(layer: Layer) {
 
 <style scoped>
 .tabs-container {
-    width: 100vw;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
     flex-grow: 1;
     overflow-x: auto;
     overflow-y: hidden;
@@ -67,8 +69,9 @@ function gatherLayerProps(layer: Layer) {
 }
 
 .tabs-container:not(.useHeader) {
-    width: calc(100vw - 50px);
-    margin-left: 50px;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
 }
 
 .tab {
@@ -81,12 +84,19 @@ function gatherLayerProps(layer: Layer) {
 }
 
 .inner-tab {
-    padding: 50px 10px;
-    min-height: calc(100% - 100px);
+    padding: 20px 15px;
+    min-height: calc(100% - 40px);
     display: flex;
     flex-direction: column;
     margin: 0;
     flex-grow: 1;
+}
+
+@media (min-width: 768px) {
+    .inner-tab {
+        padding: 30px 20px;
+        min-height: calc(100% - 60px);
+    }
 }
 
 .tab + .tab > .inner-tab {

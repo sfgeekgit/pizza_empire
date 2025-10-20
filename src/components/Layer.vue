@@ -71,7 +71,8 @@ onErrorCaptured((err, instance, info) => {
 
 <style scoped>
 .layer-container {
-    min-width: 100%;
+    width: 100%;
+    max-width: 100%;
     min-height: 100%;
     margin: 0;
     flex-grow: 1;
@@ -80,12 +81,19 @@ onErrorCaptured((err, instance, info) => {
 }
 
 .layer-tab:not(.minimized) {
-    padding-top: 20px;
-    padding-bottom: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
     min-height: 100%;
     flex-grow: 1;
     text-align: center;
     position: relative;
+}
+
+@media (min-width: 768px) {
+    .layer-tab:not(.minimized) {
+        padding-top: 20px;
+        padding-bottom: 20px;
+    }
 }
 
 .inner-tab > .layer-container > .layer-tab:not(.minimized) {
@@ -131,6 +139,7 @@ onErrorCaptured((err, instance, info) => {
 }
 
 .minimize {
+    display: none; /* Hide minimize button completely */
     position: sticky;
     top: 6px;
     right: 9px;

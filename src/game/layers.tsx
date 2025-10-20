@@ -291,7 +291,7 @@ export function createLayer<T extends LayerOptions>(
             }),
             name: processGetter(name) ?? id,
             forceHideGoBack: processGetter(forceHideGoBack),
-            minWidth: processGetter(minWidth) ?? 600,
+            minWidth: processGetter(minWidth) ?? 100,
             minimizable: processGetter(minimizable) ?? true,
             minimizedDisplay
         } satisfies Layer;
