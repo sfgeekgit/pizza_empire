@@ -258,7 +258,12 @@ const layer = createLayer(id, function (this: any) {
     const hireDriverClickable = createClickable(() => ({
         display: {
             title: "Hire Driver",
-            description: () => `Cost: $${format(Decimal.pow(G_CONF.DRIVER_COST_MULTIPLIER, drivers.value.length).times(G_CONF.DRIVER_BASE_COST))}<br>Drivers: ${drivers.value.length}`
+            description: () => (
+                <>
+                    Cost: ${format(Decimal.pow(G_CONF.DRIVER_COST_MULTIPLIER, drivers.value.length).times(G_CONF.DRIVER_BASE_COST))}<br/>
+                    Drivers: {drivers.value.length}
+                </>
+            )
         },
         canClick: () => Decimal.gte(money.value, Decimal.pow(G_CONF.DRIVER_COST_MULTIPLIER, drivers.value.length).times(G_CONF.DRIVER_BASE_COST)),
         onClick() {
@@ -283,7 +288,12 @@ const layer = createLayer(id, function (this: any) {
         return createClickable(() => ({
             display: {
                 title: `Unlock ${pizzaName}`,
-                description: `Cost: $${pizzaCost}<br>Unlock ${pizzaName} pizza deliveries`
+                description: (
+                    <>
+                        Cost: ${pizzaCost}<br/>
+                        Unlock {pizzaName} pizza deliveries
+                    </>
+                )
             },
             canClick: () => Decimal.gte(money.value, pizzaCost) && !unlockedPizzas.value.includes(pizzaName),
             onClick() {
@@ -388,10 +398,8 @@ const layer = createLayer(id, function (this: any) {
     const display: JSXFunction = () => {
         return (
             <div style="padding: 0 5px;">
-                <h2>Pizza Delivery Empire</h2>
 
                 <div style="margin: 15px 0; padding: 12px; border: 2px solid #FFA500; border-radius: 10px; background: #fff3e0;">
-                    <h3>Resources</h3>
                     <div style="font-size: 16px;"><strong>Money:</strong> ${format(money.value)}</div>
                     <div style="font-size: 14px;"><strong>Drivers:</strong> {availableDrivers.value.length} / {drivers.value.length} available</div>
                     <div style="font-size: 14px;"><strong>Unlocked Pizzas:</strong> {unlockedPizzas.value.join(", ")}</div>
@@ -432,7 +440,7 @@ const layer = createLayer(id, function (this: any) {
                                 <div style="font-size: 14px;"><strong>Pizza:</strong> {job.pizzaType}</div>
                                 <div style="font-size: 14px;"><strong>Duration:</strong> {job.duration}s</div>
                                 <div style="font-size: 14px;"><strong>Payout:</strong> ${format(job.payout)}</div>
-                                <div style="margin-top: 8px; display: flex; flex-wrap: wrap; gap: 5px; align-items: center;">
+                                <div style="margin-top: 8px; display: flex; gap: 5px;">
                                     <button
                                         onClick={() => acceptJob(job)}
                                         disabled={!canAcceptJob(job)}
@@ -462,13 +470,13 @@ const layer = createLayer(id, function (this: any) {
                                     >
                                         Decline
                                     </button>
-                                    {!unlockedPizzas.value.includes(job.pizzaType) && (
-                                        <span style="color: #d32f2f; font-weight: bold; font-size: 12px;">⚠ Need {job.pizzaType}!</span>
-                                    )}
-                                    {availableDrivers.value <= 0 && unlockedPizzas.value.includes(job.pizzaType) && (
-                                        <span style="color: #d32f2f; font-weight: bold; font-size: 12px;">⚠ No drivers!</span>
-                                    )}
                                 </div>
+                                {!unlockedPizzas.value.includes(job.pizzaType) && (
+                                    <div style="margin-top: 5px; color: #d32f2f; font-weight: bold; font-size: 12px;">⚠ Need {job.pizzaType}!</div>
+                                )}
+                                {availableDrivers.value.length <= 0 && unlockedPizzas.value.includes(job.pizzaType) && (
+                                    <div style="margin-top: 5px; color: #d32f2f; font-weight: bold; font-size: 12px;">⚠ No drivers!</div>
+                                )}
                             </div>
                         ))
                     )}
