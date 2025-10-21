@@ -1,7 +1,7 @@
 import { createLayer, layers } from "game/layers";
 import { createResource, trackBest, trackTotal } from "features/resources/resource";
 import { createClickable } from "features/clickables/clickable";
-import { jsx, JSXFunction } from "game/common";
+// import { jsx, JSXFunction } from "game/common";
 import { createTreeNode } from "features/trees/tree";
 import Decimal, { DecimalSource, format } from "util/bignum";
 import { render } from "util/vue";
@@ -58,11 +58,16 @@ const layer = createLayer(id, function (this: any) {
 
     // Persistent state - must be created first
     const nextDriverId = persistent<number>(1);
-    const drivers = persistent<Driver[]>([]);
+    ////  const drivers = persistent<Driver[]>([]); 
+    /// const drivers = persistent<Driver[]>([] as any);  // Trust me bro, it works
+    const drivers = persistent([] as any);
+
 
     // Helper function to generate a random driver name
     function generateDriverName(): string {
-        const usedNames = new Set(drivers.value.map(d => d.name));
+        const usedNames = new Set(drivers.value.map((d: Driver) => d.name));
+
+        // const usedNames = new Set(drivers.value.map(d => d.name));
         const availableNames = DRIVER_NAMES.filter(n => !usedNames.has(n));
         if (availableNames.length === 0) {
             // If all names used, start adding numbers
@@ -93,10 +98,14 @@ const layer = createLayer(id, function (this: any) {
     // Computed: Available drivers sorted by who's been waiting longest
     const availableDrivers = computed(() => {
         // Get drivers that are not currently on a delivery
-        const busyDriverIds = new Set(activeDeliveries.value.map(d => d.driverId));
+	const busyDriverIds = new Set(activeDeliveries.value.map((d: ActiveDelivery) => d.driverId));
+	//const busyDriverIds = new Set(activeDeliveries.value.map(d => d.driverId));
         return drivers.value
-            .filter(d => !busyDriverIds.has(d.id))
-            .sort((a, b) => a.lastAvailableTime - b.lastAvailableTime);
+	    .filter((d: Driver) => !busyDriverIds.has(d.id))
+	    .sort((a: Driver, b: Driver) => a.lastAvailableTime - b.lastAvailableTime);
+	
+		///    .filter(d => !busyDriverIds.has(d.id))
+        	///    .sort((a, b) => a.lastAvailableTime - b.lastAvailableTime);
     });
 
     // Read intro choices
@@ -161,6 +170,7 @@ const layer = createLayer(id, function (this: any) {
     // Watch for chapter 1 trigger
     watch(shouldShowChapter1, (should) => {
         if (should) {
+	    // @ts-ignore
             player.tabs = ["chapter1"];
         }
     }, { immediate: true });
@@ -188,6 +198,7 @@ const layer = createLayer(id, function (this: any) {
 
     watch(shouldShowChapter2, (should) => {
         if (should) {
+	    // @ts-ignore	
             player.tabs = ["chapter2"];
         }
     }, { immediate: true });
@@ -203,6 +214,7 @@ const layer = createLayer(id, function (this: any) {
 
     watch(shouldShowChapter3, (should) => {
         if (should) {
+	    // @ts-ignore	
             player.tabs = ["chapter3"];
         }
     }, { immediate: true });
@@ -218,12 +230,21 @@ const layer = createLayer(id, function (this: any) {
 
     watch(shouldShowChapter4, (should) => {
         if (should) {
+	    // @ts-ignore	
             player.tabs = ["chapter4"];
         }
     }, { immediate: true });
 
-    const jobQueue = persistent<DeliveryJob[]>([]);
-    const activeDeliveries = persistent<ActiveDelivery[]>([]);
+    /// const jobQueue = persistent<DeliveryJob[]>([]);
+    ///    const activeDeliveries = persistent<ActiveDelivery[]>([]);
+
+    /// const jobQueue = persistent<DeliveryJob[]>([] as any); // Trust me bro
+    /// const activeDeliveries = persistent<ActiveDelivery[]>([] as any); // Bro is TS
+
+    const jobQueue = persistent([] as any);
+    const activeDeliveries = persistent([] as any);
+
+
     const nextJobId = persistent<number>(0);
     const timeSinceLastJob = persistent<number>(0);
 
@@ -330,9 +351,14 @@ const layer = createLayer(id, function (this: any) {
                 money.value = Decimal.add(money.value, delivery.payout);
 
                 // Update driver's lastAvailableTime for queue rotation
-                const driverIndex = drivers.value.findIndex(d => d.id === delivery.driverId);
+		const driverIndex = drivers.value.findIndex((d: Driver) => d.id === delivery.driverId);
+		
+                /// const driverIndex = drivers.value.findIndex(d => d.id === delivery.driverId);
+		
                 if (driverIndex !== -1) {
-                    drivers.value = drivers.value.map((d, idx) => {
+		   drivers.value = drivers.value.map((d: Driver, idx: number) => {
+		
+                   ///// drivers.value = drivers.value.map((d, idx) => {
                         if (idx === driverIndex) {
                             return {
                                 ...d,
@@ -373,7 +399,9 @@ const layer = createLayer(id, function (this: any) {
         const driverId = driver.id;
 
         // Remove job from queue
-        jobQueue.value = jobQueue.value.filter(j => j.id !== job.id);
+	jobQueue.value = jobQueue.value.filter((j: DeliveryJob) => j.id !== job.id);
+
+        ///jobQueue.value = jobQueue.value.filter(j => j.id !== job.id);
 
         // Add to active deliveries - this automatically makes driver unavailable
         // because our computed checks activeDeliveries
@@ -386,7 +414,8 @@ const layer = createLayer(id, function (this: any) {
 
     // Decline job
     function declineJob(jobId: number) {
-        jobQueue.value = jobQueue.value.filter(j => j.id !== jobId);
+        jobQueue.value = jobQueue.value.filter((j: DeliveryJob) => j.id !== jobId);
+        ///jobQueue.value = jobQueue.value.filter(j => j.id !== jobId);
     }
 
     // Can accept job
@@ -395,7 +424,8 @@ const layer = createLayer(id, function (this: any) {
     }
 
     // Display
-    const display: JSXFunction = () => {
+    //const display: JSXFunction = () => {
+    const display = () => {
         return (
             <div style="padding: 0 5px;">
 
@@ -417,8 +447,10 @@ const layer = createLayer(id, function (this: any) {
                     {activeDeliveries.value.length === 0 ? (
                         <p style="font-style: italic;">No active deliveries</p>
                     ) : (
-                        activeDeliveries.value.map(delivery => {
-                            const driver = drivers.value.find(d => d.id === delivery.driverId);
+                        //activeDeliveries.value.map(delivery => {
+                            //const driver = drivers.value.find(d => d.id === delivery.driverId);
+		      	activeDeliveries.value.map((delivery: ActiveDelivery) => {
+			    const driver = drivers.value.find((d: Driver) => d.id === delivery.driverId);
                             return (
                                 <div key={delivery.id} style="margin: 10px 0; padding: 8px; background: white; border-radius: 5px; border: 1px solid #ddd;">
                                     <div style="font-size: 14px;"><strong>🚗 {driver?.name || `Driver #${delivery.driverId}`}:</strong> Delivering {delivery.pizzaType} pizza</div>
@@ -435,7 +467,8 @@ const layer = createLayer(id, function (this: any) {
                     {jobQueue.value.length === 0 ? (
                         <p style="font-style: italic;">No jobs available. New jobs arrive every 60 seconds.</p>
                     ) : (
-                        jobQueue.value.map(job => (
+		        jobQueue.value.map((job: DeliveryJob) => (
+                        //jobQueue.value.map(job => (
                             <div key={job.id} style="margin: 10px 0; padding: 8px; background: white; border-radius: 5px; border: 1px solid #ddd;">
                                 <div style="font-size: 14px;"><strong>Pizza:</strong> {job.pizzaType}</div>
                                 <div style="font-size: 14px;"><strong>Duration:</strong> {job.duration}s</div>

@@ -10,5 +10,16 @@
     "initialTabs": ["intro"],
     "maxTickLength": 3600000,
     "enablePausing": true,
-    "showNews": false
+    "showNews": false,
+
+    "useHeader": true,
+    "banner": null,
+    "logo": null,
+    "exportEncoding": "base64",
+    "offlineLimit": 1,
+    "defaultDecimalsShown": 0,
+    "defaultShowSmall": false,
+    "allowGoBack": false,
+    "disableHealthWarning": false
+
 }
