@@ -35,7 +35,21 @@ This is an incremental/idle game built with the Profectus framework where player
 
 ## Framework Modifications
 
-### 1. Removed Sidebar Navigation
+### 1. Mobile Responsive Layout
+**Files Modified:** `src/game/layers.tsx`, `Game.vue`, `Layer.vue`, `main.css`
+
+**Key Change:**
+- Modified framework default `minWidth` from **600px to 100px** in `layers.tsx` (line 294)
+- This allows layers to shrink properly on mobile devices (360-414px screens)
+- Added responsive CSS with `max-width: 800px` container centered on desktop
+- Added `box-sizing: border-box` globally to prevent overflow
+- Reduced padding/margins with mobile breakpoints at 768px
+
+**Why:** Default 600px minimum forced horizontal scrolling on phones. 100px allows proper mobile rendering while maintaining desktop layout.
+
+---
+
+### 2. Removed Sidebar Navigation
 **Files Modified:** `App.vue`, `Game.vue`
 
 **Changes:**

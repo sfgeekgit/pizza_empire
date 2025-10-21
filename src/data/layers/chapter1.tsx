@@ -138,7 +138,8 @@ const layer = createLayer(id, function (this: any) {
         }
     }
 
-    const display = () => {
+    const display = (() => {
+
         const page = pages[currentPage.value];
 
         if (!page) {
@@ -208,7 +209,9 @@ const layer = createLayer(id, function (this: any) {
                 </div>
             </div>
         );
-    };
+    //};
+    }) as any;
+    
 
     return {
         name,
