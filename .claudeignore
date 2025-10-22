@@ -1,0 +1,7 @@
+# Dependencies and build artifacts
+node_modules/
+dist/
+.vite/
+
+# Framework documentation (not needed for development)
+CHANGELOG.md
