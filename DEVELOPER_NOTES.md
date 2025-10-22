@@ -598,6 +598,9 @@ Profectus auto-saves to localStorage every few seconds. Saves persist across ref
 
 To reset: Settings gear icon (bottom-left) → Hard Reset
 
+### Claude Code (.claudeignore)
+Minimal ignore list to reduce AI assistant costs. Only ignores `node_modules/`, `dist/`, `.vite/`, and `CHANGELOG.md`. Keeps all framework features (bars, particles, achievements, etc.) accessible so Claude Code can discover and use them.
+
 ### TypeScript Errors
 If you see TS errors but game works, it's usually safe to ignore during prototyping. Run `npm run build` before production to catch real issues.
 
